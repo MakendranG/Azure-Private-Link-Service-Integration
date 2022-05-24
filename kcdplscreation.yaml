@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kcdService
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true" # Right now PLS must be used with internal LB
+    service.beta.kubernetes.io/azure-pls-create: "true"
+    service.beta.kubernetes.io/azure-pls-name: myServicePLS
+    service.beta.kubernetes.io/azure-pls-ip-configuration-subnet: pls-subnet
+    service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count: "1"
+    service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address: 10.240.0.9 # Must be available in pls-subnet
+    service.beta.kubernetes.io/azure-pls-fqdns: "fqdn1 fqdn2"
+    service.beta.kubernetes.io/azure-pls-proxy-protocol: "false"
+    service.beta.kubernetes.io/azure-pls-visibility: "*"
+    service.beta.kubernetes.io/azure-pls-auto-approval: "subId1"
+spec:
+  type: LoadBalancer
+  selector:
+    app: myApp
+  ports:
+    - name: myAppPort
+      protocol: TCP
+      port: 80
+      targetPort: 80
